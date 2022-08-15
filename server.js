@@ -38,8 +38,6 @@ ws.on("connection", (websocketConnection) => {
   });
 });
 
-// (((0.5 * 1920 * 100) / 1920) * 1920) / 100;
-
 ws.on("close", () => {
   console.log("[CONNECTION] Client has disconnected.");
 });
