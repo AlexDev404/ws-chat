@@ -4,14 +4,29 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="frontend.js"></script>
+    <link rel="stylesheet" href="./assets/css/tailwind.css" />
+    <script src="frontend.js" defer></script>
     <title>Document</title>
   </head>
-  <body>
-    <h1>Websocket Relay Application</h1>
-    <form>
-      <input type="text" placeholder="Message" />
-      <button>Submit To Server</button>
-    </form>
+  <body class="px-10 py-2">
+    <h1 class="inline text-2xl font-black">Websocket Relay Application</h1>
+    <input type="text" placeholder="Your Username" id="username">
+    <div id="chat_container" class="chat-container block py-10"></div>
+  
+      <input type="text" id="contentBox" placeholder="Message" class="border border-black" />
+      <button
+        onclick="send()"
+        class="bg-gray-200 border-0 px-2 py-1 rounded-md"
+      >
+        Submit To Server
+      </button>
+    
   </body>
+  <script type="text/html" id="chatTemplate">
+    <div id="msg-container" class="flex">
+      <div id="timestamp" class="text-gray-500 mr-2">[4:02PM]</div>
+      <div id="sender" class="font-semibold">Johnathan</div>
+      <div id="message" class="ml-2">Hi! How was work today?</div>
+    </div>
+  </script>
 </html>

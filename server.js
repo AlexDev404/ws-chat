@@ -3,6 +3,7 @@ const app = express();
 const WebSocketServer = require("ws").Server;
 const path = require("path");
 const port = 8010;
+const chatlog = [];
 
 const server = app.listen(port, () => {
   if (process.send) {
@@ -30,11 +31,20 @@ server.on("upgrade", (request, socket, head) => {
 ws.on("connection", (websocketConnection) => {
   console.log("[CONNECTION] Client is Attempting To Connect!");
 
-  websocketConnection.send(JSON.stringify(["OK"]));
+  websocketConnection.send(JSON.stringify(chatlog));
 
   websocketConnection.on("message", (message) => {
-    data = JSON.parse(message);
+    let data;
+    try {
+      data = JSON.parse(message);
+    } catch (error) {
+      console.warn("[SUBSYSTEM] Format Unsupported");
+      return;
+    }
     console.log(data);
+    data.timestamp = Math.floor(Date.now() / 1000).toString();
+    chatlog.push(data);
+    websocketConnection.send(JSON.stringify(chatlog));
   });
 });
 
