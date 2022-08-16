@@ -112,7 +112,7 @@ function systemBroadcast(message) {
 }
 
 // Send a heartbeat to the client every 20s
-
+// We do this to prevent the socket from commiting suicide.
 setInterval(() => {
   ws.broadcast(JSON.stringify(chatlog));
 }, 20000);
