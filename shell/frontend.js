@@ -41,6 +41,7 @@ function send() {
   // Scroll down right after message is sent. WebSocket's connection delay is approximately 200ms
   setTimeout(() => {
     window.scrollTo(0, document.body.scrollHeight);
+    contentBox.value = "";
   }, 250);
 }
 

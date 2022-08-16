@@ -68,9 +68,7 @@ ws.on("connection", (websocketConnection) => {
       data.sendAs.toString().toUpperCase() == "SUBSYSTEM"
     ) {
       console.warn("[SUBSYSTEM] Format Unsupported");
-      systemBroadcast(
-        'Cannot set username to a reserved username.'
-      );
+      systemBroadcast("Cannot set username to a reserved username.");
       return;
     }
 
@@ -109,3 +107,9 @@ function systemBroadcast(message) {
   });
   ws.broadcast(JSON.stringify(chatlog));
 }
+
+// Send a heartbeat to the client every 10s
+
+setInterval(() => {
+  ws.broadcast(JSON.stringify(chatlog));
+}, 10000);
