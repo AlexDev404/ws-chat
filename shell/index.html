@@ -5,46 +5,101 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/tailwind.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+      integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
     <script src="frontend.js" defer></script>
     <title>Document</title>
+    <style>
+      *:focus {
+        outline: none;
+      }
+    </style>
   </head>
-  <body class="px-10 py-2">
-    <h1 class="inline text-2xl font-black">Websocket Relay Application</h1>
-    <input
-      type="text"
-      placeholder="Your Username"
-      id="username"
-      class="border border-black"
-    />
-    <input
-      type="text"
-      placeholder="Remote Server Address"
-      id="server_addr"
-      value="ws://"
-      class="border border-black"
-    />
-    <button onclick="init()" class="bg-gray-200 border-0 px-2 py-1 rounded-md">
-      Connect
-    </button>
-    <div id="chat_container" class="chat-container block py-10"></div>
+  <body class="pb-10">
+    <header
+      style="background: rgb(0, 169, 162)"
+      class="flex flex-wrap font-light text-white py-5 px-5"
+    >
+      <div class="inline text-2xl pb-2" style="flex-basis: 100%">
+        Websocket Relay Application
+      </div>
 
-    <div class="contentContainer w-full flex">
-    <input
-      type="text"
-      id="contentBox"
-      placeholder="Message"
-      class="border border-black w-full"
-    />
-    <button onclick="send();" class="bg-gray-200 border-0 px-2 py-1 rounded-md">
-      Send
-    </button>
-  </div>
+      <form
+        id="connectionProps"
+        onsubmit="return init()"
+        class="my-5"
+        style="flex-basis: 100%"
+      >
+        <input
+          type="text"
+          placeholder="Your Username"
+          id="username"
+          class="border border-black text-black"
+        />
+        <input
+          type="text"
+          placeholder="Remote Server Address"
+          id="server_addr"
+          value="ws://"
+          class="border border-black text-black"
+        />
+        <button type="submit"></button>
+      </form>
+      <button
+        onclick="init()"
+        class="bg-blue-500 border-0 px-2 py-1 rounded-md font-semibold"
+      >
+        CONNECT
+      </button>
+    </header>
+    <main>
+      <div id="chat_container" class="chat-container block px-10 py-12"></div>
+
+      <div class="border border-gray-200"></div>
+      <form id="MCC" class="contentContainer w-full flex flex-wrap">
+        <input
+          type="text"
+          id="contentBox"
+          placeholder="Message"
+          class="basis-full w-full pb-20 py-5 px-6"
+        />
+        <button
+          type="submit"
+          onclick="send();"
+          class="bg-blue-500 border-0 text-white mx-2 px-5 py-1 rounded-sm"
+        >
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </main>
   </body>
   <script type="text/html" id="chatTemplate">
-    <div id="msg-container" class="flex">
-      <div id="timestamp" class="text-gray-500 mr-2">[4:02PM]</div>
-      <div id="sender" class="font-semibold">Johnathan</div>
-      <div id="message" class="ml-2">Hi! How was work today?</div>
+    <div
+      id="msg-container"
+      class="flex flex-wrap w-3/4 my-10 py-4 px-3 bg-gray-100 rounded-md"
+    >
+      <div class="meta_container flex basis-full">
+        <div id="sender" class="font-semibold pr-4">User</div>
+        <div id="timestamp" class="text-gray-500">0:00 AM</div>
+      </div>
+      <div id="message" class="ml-2">
+        <i>Empty Message</i>
+      </div>
     </div>
+  </script>
+  <script>
+    connectionProps.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+
+    MCC.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
   </script>
 </html>

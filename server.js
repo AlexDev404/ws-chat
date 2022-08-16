@@ -57,6 +57,7 @@ ws.on("connection", (websocketConnection) => {
         systemBroadcast(
           "Cannot send message as <b>Anonymous</b>. Ask the server owner to enable this feature"
         );
+        websocketConnection.close();
         return;
       }
     }
@@ -69,6 +70,7 @@ ws.on("connection", (websocketConnection) => {
     ) {
       console.warn("[SUBSYSTEM] Format Unsupported");
       systemBroadcast("Cannot set username to a reserved username.");
+      websocketConnection.close();
       return;
     }
 
@@ -81,6 +83,7 @@ ws.on("connection", (websocketConnection) => {
     ) {
       console.warn("[SUBSYSTEM] Format Unsupported");
       systemBroadcast("You cannot send an empty message. Please, try again.");
+      websocketConnection.close();
       return;
     }
     console.log(data.sendAs, "-", data.message);
