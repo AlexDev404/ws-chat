@@ -2,20 +2,13 @@ const express = require("express");
 const app = express();
 const WebSocketServer = require("ws").Server;
 const path = require("path");
-const port = 8010;
-const root_port = 80;
+const port = 80;
 const chatlog = [];
 const anonyMode = false;
 
 const server = app.listen(port, () => {
   if (process.send) {
     process.send(`Server running on port ${port}\n\n`);
-  }
-});
-
-const rootServer = app.listen(root_port, () => {
-  if (process.send) {
-    process.send(`Root server running on port ${port}\n\n`);
   }
 });
 
