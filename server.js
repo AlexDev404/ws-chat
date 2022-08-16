@@ -85,7 +85,7 @@ ws.on("connection", (websocketConnection) => {
       systemBroadcast("You cannot send an empty message. Please, try again.");
       return;
     }
-    console.log(data);
+    console.log(data.sendAs, "-", data.message);
     data.timestamp = Date.now().toString(); // Milliseconds since UNIX Epoch
     chatlog.push(data);
     ws.broadcast(JSON.stringify(chatlog));
