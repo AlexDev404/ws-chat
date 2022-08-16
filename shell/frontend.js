@@ -76,7 +76,9 @@ function listen() {
         }
 
         if (!scriptTest.test(message.message)) {
-          sID("message", `${index}__msg`).innerHTML = message.message;
+          // Patchwork: Convert \n \b into <br/>
+          // sID("message", `${index}__msg`).innerHTML = message.message;
+          sID("message", `${index}__msg`).textContent = message.message;
         } else {
           sID("message", `${index}__msg`).innerHTML =
             "<i>Content Sanitized</i>";
@@ -114,8 +116,7 @@ function listen() {
           if (!scriptTest.test(message.message)) {
             // Patchwork: Convert \n \b into <br/>
             // sID("message", `${index}__msg`).innerHTML = message.message;
-             sID("message", `${index}__msg`).textContent = message.message;
-
+            sID("message", `${index}__msg`).textContent = message.message;
           } else {
             sID("message", `${index}__msg`).innerHTML =
               "<i>Content Sanitized</i>";
