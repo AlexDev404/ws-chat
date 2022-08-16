@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const WebSocketServer = require("ws").Server;
 const path = require("path");
-const port = 8010;
+const port = process.env.PORT || 8010;
 const chatlog = [];
 const anonyMode = false;
 
