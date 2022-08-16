@@ -24,7 +24,7 @@
   <body class="pb-10">
     <header
       style="background: rgb(0, 169, 162)"
-      class="flex flex-wrap font-light text-white py-5 px-5"
+      class="sticky top-0 flex flex-wrap font-light text-white py-5 px-5"
     >
       <div class="inline text-2xl pb-2" style="flex-basis: 100%">
         Websocket Relay Application
@@ -64,20 +64,20 @@
       <div class="border border-gray-200"></div>
       <form id="MCC" class="contentContainer w-full flex flex-wrap">
         <fieldset id="MCC_1" disabled>
-        <input
-          type="text"
-          id="contentBox"
-          placeholder="You cannot type here right now."
-          class="basis-full w-screen pb-20 py-5 px-6"
-        />
-        <button
-          type="submit"
-          onclick="send();"
-          class="bg-blue-500 border-0 text-white mx-2 px-5 py-1 rounded-sm"
-        >
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
-      </fieldset>
+          <input
+            type="text"
+            id="contentBox"
+            placeholder="You cannot type here right now."
+            class="basis-full w-screen pb-20 py-5 px-6"
+          />
+          <button
+            type="submit"
+            onclick="send();"
+            class="bg-blue-500 border-0 text-white mx-2 px-5 py-1 rounded-sm"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </fieldset>
       </form>
     </main>
   </body>
@@ -90,7 +90,7 @@
         <div id="sender" class="font-semibold pr-4">User</div>
         <div id="timestamp" class="text-gray-500">0:00 AM</div>
       </div>
-      <div id="message" class="ml-2">
+      <div id="message" class="ml-2" style="overflow-wrap: anywhere;">
         <i>Empty Message</i>
       </div>
     </div>
