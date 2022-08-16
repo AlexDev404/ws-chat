@@ -63,8 +63,19 @@ function listen() {
         ).toLocaleString([], {
           timeStyle: "short",
         });
-        sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
-        sID("message", `${index}__msg`).innerHTML = message.message;
+        if (!scriptTest.test(message.sendAs)) {
+          sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
+        } else {
+          sID("sender", `${index}__sndr`).innerHTML =
+            "<i>Content Sanitized</i>";
+        }
+
+        if (!scriptTest.test(message.message)) {
+          sID("message", `${index}__msg`).innerHTML = message.message;
+        } else {
+          sID("message", `${index}__msg`).innerHTML =
+            "<i>Content Sanitized</i>";
+        }
         last_ts = message.timestamp; // Speed messaging enabled
       });
     } else {
@@ -90,9 +101,16 @@ function listen() {
           });
           if (!scriptTest.test(message.sendAs)) {
             sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
+          } else {
+            sID("sender", `${index}__sndr`).innerHTML =
+              "<i>Content Sanitized</i>";
           }
+
           if (!scriptTest.test(message.message)) {
             sID("message", `${index}__msg`).innerHTML = message.message;
+          } else {
+            sID("message", `${index}__msg`).innerHTML =
+              "<i>Content Sanitized</i>";
           }
           last_ts = message.timestamp; // speed messaging enabled
         }
