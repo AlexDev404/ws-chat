@@ -4,6 +4,7 @@ let mDb = [];
 let last_ts = 0;
 const __chat = document.getElementById("chat_container");
 const chatTemplate = document.getElementById("chatTemplate");
+const scriptTest = /<script[\s\S]*?>[\s\S]*?<\/script>/gi;
 class wsMsg {
   constructor(username, message) {
     this.message = message;
@@ -78,13 +79,21 @@ function listen() {
           __chat.innerHTML = `${__chat.innerHTML}${chatTemplate.innerHTML}`;
           m = sID("msg-container", index);
           //   m.timestamp, m.sender, m.message
+
+          // This comes from the server, don't need to test since
+          // it'll just fail the conversion if it's not a valid timestamp
+
           sID("timestamp", `${index}__ts`).innerHTML = new Date(
             parseInt(message.timestamp)
           ).toLocaleString([], {
             timeStyle: "short",
           });
-          sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
-          sID("message", `${index}__msg`).innerHTML = message.message;
+          if (!scriptTest.test(message.sendAs)) {
+            sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
+          }
+          if (!scriptTest.test(message.message)) {
+            sID("message", `${index}__msg`).innerHTML = message.message;
+          }
           last_ts = message.timestamp; // speed messaging enabled
         }
       });
@@ -92,7 +101,7 @@ function listen() {
     // By all means, scroll to bottom of page
     setTimeout(() => {
       window.scrollTo(0, document.body.scrollHeight);
-     // contentBox.value = "";
+      // contentBox.value = "";
     }, 250);
   });
 }
