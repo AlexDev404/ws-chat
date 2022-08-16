@@ -19,7 +19,7 @@ const rootServer = app.listen(root_port, () => {
   }
 });
 
-app.use("/shell", express.static(path.join(__dirname, "shell/")));
+app.use("/", express.static(path.join(__dirname, "shell/")));
 
 // Gyro Server
 
