@@ -28,6 +28,11 @@ function init() {
       // Web Socket is connected, send data using send()
       wsOpen = true;
       listen();
+      // Enable message sending
+      if (MCC_1.hasAttribute("disabled")) {
+        MCC_1.toggleAttribute("disabled");
+      }
+      contentBox.placeholder = "Type a message";
     };
   }
 }
@@ -121,6 +126,13 @@ function listen() {
       window.scrollTo(0, document.body.scrollHeight);
       // contentBox.value = "";
     }, 250);
+  });
+
+  ws.addEventListener("close", () => {
+    if (!MCC_1.hasAttribute("disabled")) {
+      MCC_1.toggleAttribute("disabled");
+    }
+    contentBox.placeholder = "You have been disconnected from the server.";
   });
 }
 
