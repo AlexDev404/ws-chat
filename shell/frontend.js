@@ -89,6 +89,11 @@ function listen() {
         }
       });
     }
+    // By all means, scroll to bottom of page
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+      contentBox.value = "";
+    }, 250);
   });
 }
 
