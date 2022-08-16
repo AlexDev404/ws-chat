@@ -28,15 +28,17 @@
     </button>
     <div id="chat_container" class="chat-container block py-10"></div>
 
+    <div class="contentContainer w-full flex">
     <input
       type="text"
       id="contentBox"
       placeholder="Message"
-      class="border border-black"
+      class="border border-black w-full"
     />
     <button onclick="send();" class="bg-gray-200 border-0 px-2 py-1 rounded-md">
-      Submit To Server
+      Send
     </button>
+  </div>
   </body>
   <script type="text/html" id="chatTemplate">
     <div id="msg-container" class="flex">
