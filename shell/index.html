@@ -10,17 +10,32 @@
   </head>
   <body class="px-10 py-2">
     <h1 class="inline text-2xl font-black">Websocket Relay Application</h1>
-    <input type="text" placeholder="Your Username" id="username">
+    <input
+      type="text"
+      placeholder="Your Username"
+      id="username"
+      class="border border-black"
+    />
+    <input
+      type="text"
+      placeholder="Remote Server Address"
+      id="server_addr"
+      class="border border-black"
+    />
+    <button onclick="init()" class="bg-gray-200 border-0 px-2 py-1 rounded-md">
+      Connect
+    </button>
     <div id="chat_container" class="chat-container block py-10"></div>
-  
-      <input type="text" id="contentBox" placeholder="Message" class="border border-black" />
-      <button
-        onclick="send()"
-        class="bg-gray-200 border-0 px-2 py-1 rounded-md"
-      >
-        Submit To Server
-      </button>
-    
+
+    <input
+      type="text"
+      id="contentBox"
+      placeholder="Message"
+      class="border border-black"
+    />
+    <button onclick="send()" class="bg-gray-200 border-0 px-2 py-1 rounded-md">
+      Submit To Server
+    </button>
   </body>
   <script type="text/html" id="chatTemplate">
     <div id="msg-container" class="flex">

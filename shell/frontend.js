@@ -1,4 +1,5 @@
 let mDb = [];
+let last_ts = 0;
 const __chat = document.getElementById("chat_container");
 const chatTemplate = document.getElementById("chatTemplate");
 class wsMsg {
@@ -9,18 +10,23 @@ class wsMsg {
 }
 
 let ws;
-let server = "127.0.0.1";
-const address = `ws://${server}:8010/`;
+let address;
+server_addr.addEventListener("keyup", () => {
+  address = `ws://${server_addr.value}:8010/`;
+});
 let wsOpen = false;
 
-if ("WebSocket" in window) {
-  // Let us open a web socket
-  ws = new WebSocket(address);
+function init() {
+  if ("WebSocket" in window) {
+    // Let us open a web socket
+    ws = new WebSocket(address);
 
-  ws.onopen = function () {
-    // Web Socket is connected, send data using send()
-    wsOpen = true;
-  };
+    ws.onopen = function () {
+      // Web Socket is connected, send data using send()
+      wsOpen = true;
+      listen();
+    };
+  }
 }
 
 function send() {
@@ -32,24 +38,52 @@ function send() {
   }
 }
 
-// Listen for messages
-ws.addEventListener("message", (event) => {
-  //   console.log("Message from server ", event.data);
-  mDb = JSON.parse(event.data);
+function listen() {
+  // Listen for messages
+  ws.addEventListener("message", (event) => {
+    //   console.log("Message from server ", event.data);
+    console.log("Message from server");
+    mDb = JSON.parse(event.data);
 
-  if (__chat.innerHTML == "") {
-    mDb.forEach((message, index) => {
-      __chat.innerHTML = `${__chat.innerHTML}${chatTemplate.innerHTML}`;
-      m = sID("msg-container", index);
-      //   m.timestamp, m.sender, m.message
-      sID("timestamp", `${index}__ts`).innerHTML = new Date(
-        parseInt(message.timestamp)*1000
-      ).toString();
-      sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
-      sID("message", `${index}__msg`).innerHTML = message.message;
-    });
-  }
-});
+    if (__chat.innerHTML == "") {
+      mDb.forEach((message, index) => {
+        __chat.innerHTML = `${__chat.innerHTML}${chatTemplate.innerHTML}`;
+        m = sID("msg-container", index);
+        //   m.timestamp, m.sender, m.message
+        sID("timestamp", `${index}__ts`).innerHTML = new Date(
+          parseInt(message.timestamp)
+        ).toLocaleString([], {
+          timeStyle: "short",
+        });
+        sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
+        sID("message", `${index}__msg`).innerHTML = message.message;
+        last_ts = message.timestamp; // Speed messaging enabled
+      });
+    } else {
+      mDb.forEach((message, index) => {
+        // console.log(
+        //   parseInt(message.timestamp),
+        //   parseInt(last_ts),
+        //   parseInt(message.timestamp) > parseInt(last_ts),
+        //   index
+        // );
+        if (parseInt(message.timestamp) > parseInt(last_ts)) {
+          __chat.innerHTML = `${__chat.innerHTML}${chatTemplate.innerHTML}`;
+          m = sID("msg-container", index);
+          //   m.timestamp, m.sender, m.message
+          sID("timestamp", `${index}__ts`).innerHTML = new Date(
+            parseInt(message.timestamp)
+          ).toLocaleString([], {
+            timeStyle: "short",
+          });
+          sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
+          sID("message", `${index}__msg`).innerHTML = message.message;
+          last_ts = message.timestamp; // speed messaging enabled
+        }
+      });
+    }
+  });
+}
 
 function sID(od, nd) {
   od = document.getElementById(od);
