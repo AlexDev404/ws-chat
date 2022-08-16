@@ -1,3 +1,5 @@
+// Frontend.js - Enables the interaction with the backend.
+
 let mDb = [];
 let last_ts = 0;
 const __chat = document.getElementById("chat_container");
@@ -36,6 +38,10 @@ function send() {
       JSON.stringify({ message: message.message, sendAs: message.sendAs })
     );
   }
+  // Scroll down right after message is sent. WebSocket's connection delay is approximately 200ms
+  setTimeout(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, 250);
 }
 
 function listen() {
