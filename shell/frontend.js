@@ -44,7 +44,7 @@ ws.addEventListener("message", (event) => {
       //   m.timestamp, m.sender, m.message
       sID("timestamp", `${index}__ts`).innerHTML = new Date(
         parseInt(message.timestamp)*1000
-      );
+      ).toString();
       sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
       sID("message", `${index}__msg`).innerHTML = message.message;
     });
