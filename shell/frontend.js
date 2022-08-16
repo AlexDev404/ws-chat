@@ -12,7 +12,7 @@ class wsMsg {
 let ws;
 let address;
 server_addr.addEventListener("keyup", () => {
-  address = `ws://${server_addr.value}/`;
+  address = server_addr.value;
 });
 let wsOpen = false;
 
