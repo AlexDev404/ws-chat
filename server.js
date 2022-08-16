@@ -111,8 +111,8 @@ function systemBroadcast(message) {
   ws.broadcast(JSON.stringify(chatlog));
 }
 
-// Send a heartbeat to the client every 10s
+// Send a heartbeat to the client every 20s
 
 setInterval(() => {
   ws.broadcast(JSON.stringify(chatlog));
-}, 10000);
+}, 20000);
