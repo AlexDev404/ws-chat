@@ -48,14 +48,26 @@ ws.on("connection", (websocketConnection) => {
     // Check if there is a username
 
     if (!anonyMode) {
-      if (
-        data.identity[0] === false ||
-        data.identity[0] == "undefined" ||
-        data.identity[0] == ""
-      ) {
+      try {
+        if (
+          data.identity[0] === false ||
+          data.identity[0] == "undefined" ||
+          data.identity[0] == ""
+        ) {
+          console.warn("[SUBSYSTEM] Format Unsupported");
+          systemBroadcast(
+            "Cannot send message as <b>Anonymous</b>. Ask the server owner to enable this feature"
+          );
+          websocketConnection.close();
+          return;
+        }
+      } catch (error) {
         console.warn("[SUBSYSTEM] Format Unsupported");
         systemBroadcast(
-          "Cannot send message as <b>Anonymous</b>. Ask the server owner to enable this feature"
+          "Format Error -> Identity -> Expected Array, Got " +
+            "<b>'" +
+            typeof data.identity +
+            "'</b>"
         );
         websocketConnection.close();
         return;
@@ -88,7 +100,7 @@ ws.on("connection", (websocketConnection) => {
     }
     let fMsg;
     if (data.message.length > 250) {
-      fMsg = "Too large to render. Possibly a buffer";
+      fMsg = "Too large to render. Possibly a buffer.";
     }
     console.log(data.identity[0], "-", fMsg);
     data.timestamp = Date.now().toString(); // Milliseconds since UNIX Epoch
