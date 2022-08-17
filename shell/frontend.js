@@ -6,9 +6,9 @@ const __chat = document.getElementById("chat_container");
 const chatTemplate = document.getElementById("chatTemplate");
 const scriptTest = /<script[\s\S]*?>[\s\S]*?<\/script>/gi;
 class wsMsg {
-  constructor(username, message) {
+  constructor(pfp, username, message) {
     this.message = message;
-    this.sendAs = username;
+    this.identity = [username, pfp];
   }
 }
 
@@ -32,16 +32,21 @@ function init() {
       if (MCC_1.hasAttribute("disabled")) {
         MCC_1.toggleAttribute("disabled");
       }
-      contentBox.placeholder = "Type a message";
+      console.log("[READY] Websocket connected successfully.");
+      contentBox.placeholder =
+        "Type a message. (Hint: Drag images here to upload)";
     };
   }
 }
 
 function send() {
   if (wsOpen) {
-    const message = new wsMsg(username.value, contentBox.value);
+    const message = new wsMsg(pfp.src, username.value, contentBox.value);
     ws.send(
-      JSON.stringify({ message: message.message, sendAs: message.sendAs })
+      JSON.stringify({
+        message: message.message,
+        identity: [message.identity[0], message.identity[1]],
+      })
     );
   }
   // Scroll down right after message is sent. WebSocket's connection delay is approximately 200ms
@@ -51,11 +56,23 @@ function send() {
   }, 250);
 }
 
+function sendMsg(msg) {
+  if (wsOpen) {
+    const message = new wsMsg(pfp.src, username.value, msg);
+    ws.send(
+      JSON.stringify({
+        message: message.message,
+        identity: [message.identity[0], message.identity[1]],
+      })
+    );
+  }
+}
+
 function listen() {
   // Listen for messages
   ws.addEventListener("message", (event) => {
     //   console.log("Message from server ", event.data);
-    console.log("Message from server");
+    // console.log("Message from server");
     mDb = JSON.parse(event.data);
 
     if (__chat.innerHTML == "") {
@@ -68,8 +85,10 @@ function listen() {
         ).toLocaleString([], {
           timeStyle: "short",
         });
-        if (!scriptTest.test(message.sendAs)) {
-          sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
+        sID("msg-pfp", `${index}__pfp`).src =
+          message.identity[1] || "./assets/png/nouser.png";
+        if (!scriptTest.test(message.identity[0])) {
+          sID("sender", `${index}__sndr`).innerHTML = message.identity[0];
         } else {
           sID("sender", `${index}__sndr`).innerHTML =
             "<i>Content Sanitized</i>";
@@ -104,8 +123,10 @@ function listen() {
           ).toLocaleString([], {
             timeStyle: "short",
           });
-          if (!scriptTest.test(message.sendAs)) {
-            sID("sender", `${index}__sndr`).innerHTML = message.sendAs;
+          sID("msg-pfp", `${index}__pfp`).src =
+            message.identity[1] || "./assets/png/nouser.png";
+          if (!scriptTest.test(message.identity[0])) {
+            sID("sender", `${index}__sndr`).innerHTML = message.identity[0];
           } else {
             sID("sender", `${index}__sndr`).innerHTML =
               "<i>Content Sanitized</i>";

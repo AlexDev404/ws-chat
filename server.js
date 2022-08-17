@@ -32,7 +32,7 @@ server.on("upgrade", (request, socket, head) => {
 ws.on("connection", (websocketConnection) => {
   console.log("[CONNECTION] Client is Attempting To Connect!");
 
-  systemBroadcast("Client has joined the chat.");
+  systemBroadcast("Someone has just joined the chat.");
   websocketConnection.send(JSON.stringify(chatlog));
 
   websocketConnection.on("message", (message) => {
@@ -49,9 +49,9 @@ ws.on("connection", (websocketConnection) => {
 
     if (!anonyMode) {
       if (
-        "sendAs" in data === false ||
-        data.sendAs == "undefined" ||
-        data.sendAs == ""
+        data.identity[0] === false ||
+        data.identity[0] == "undefined" ||
+        data.identity[0] == ""
       ) {
         console.warn("[SUBSYSTEM] Format Unsupported");
         systemBroadcast(
@@ -65,8 +65,8 @@ ws.on("connection", (websocketConnection) => {
     // Check if the user is using a reserved username
 
     if (
-      data.sendAs.toString().toUpperCase() == "SYSTEM" ||
-      data.sendAs.toString().toUpperCase() == "SUBSYSTEM"
+      data.identity[0].toString().toUpperCase() == "SYSTEM" ||
+      data.identity[0].toString().toUpperCase() == "SUBSYSTEM"
     ) {
       console.warn("[SUBSYSTEM] Format Unsupported");
       systemBroadcast("Cannot set username to a reserved username.");
@@ -86,7 +86,11 @@ ws.on("connection", (websocketConnection) => {
       websocketConnection.close();
       return;
     }
-    console.log(data.sendAs, "-", data.message);
+    let fMsg;
+    if (data.message.length > 250) {
+      fMsg = "Too large to render. Possibly a buffer";
+    }
+    console.log(data.identity[0], "-", fMsg);
     data.timestamp = Date.now().toString(); // Milliseconds since UNIX Epoch
     chatlog.push(data);
     ws.broadcast(JSON.stringify(chatlog));
@@ -106,7 +110,7 @@ function systemBroadcast(message) {
   chatlog.push({
     message: message,
     timestamp: Date.now().toString(),
-    sendAs: "SYSTEM",
+    identity: ["SYSTEM", ""],
   });
   ws.broadcast(JSON.stringify(chatlog));
 }

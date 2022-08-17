@@ -16,14 +16,16 @@
     <script src="frontend.js" defer></script>
     <title>Document</title>
     <style>
-      *{
+      * {
         box-sizing: border-box;
         padding: 0;
         margin: 0;
-     
       }
       *:focus {
         outline: none;
+      }
+      .fold {
+        height: 12.25vh;
       }
     </style>
   </head>
@@ -32,51 +34,81 @@
       style="background: rgb(0, 169, 162)"
       class="sticky top-0 flex flex-wrap font-light text-white py-5 px-5"
     >
-      <div class="inline text-2xl pb-2" style="flex-basis: 100%">
-        Websocket Relay Application
+      <div class="title flex flex-wrap" style="flex-basis: 100%">
+        <div class="inline text-2xl pb-2" style="flex-basis: 100%">
+          Websocket Relay Application
+        </div>
+        <button
+          class="bg-gray-900 px-4 py-2"
+          onclick="document.getElementById('header').classList.toggle('hidden')"
+        >
+          Fold Header
+        </button>
       </div>
-
-      <form
-        id="connectionProps"
-        onsubmit="return init()"
-        class="my-5"
-        style="flex-basis: 100%"
-      >
-        <input
-          type="text"
-          placeholder="Your Username"
-          id="username"
-          class="border border-black text-black"
-        />
-        <input
-          type="text"
-          placeholder="Remote Server Address"
-          id="server_addr"
-          value="ws://"
-          class="border border-black text-black"
-        />
-        <button type="submit"></button>
-      </form>
-      <button
-        onclick="init()"
-        class="bg-blue-500 border-0 px-2 py-1 rounded-md font-semibold"
-      >
-        CONNECT
-      </button>
+      <div id="header">
+        <form
+          id="connectionProps"
+          onsubmit="return init()"
+          class="my-5"
+          style="flex-basis: 100%"
+        >
+          <div class="text-xl" style="flex-basis: 100%">
+            Identity (Drop image to set profile photo)
+          </div>
+          <div class="identity-form flex mb-10" style="flex-basis: 100%">
+            <img
+              id="pfp"
+              alt="Profile Photo"
+              class="bg-gray-500 mr-4"
+              style="max-height: 50px; min-height: 50px; max-width: 50px; min-width: 50px;"
+              ondragover="allowDrop(event)"
+              ondrop="drop(event, this.id, true)"
+            />
+            <input
+              type="text"
+              placeholder="Your Username"
+              id="username"
+              class="border border-black text-black px-2"
+            />
+          </div>
+          <div class="text-xl">Remote Address</div>
+          <input
+            type="text"
+            placeholder="Remote Server Address"
+            id="server_addr"
+            value="ws://"
+            class="border border-black text-black"
+          />
+          <button type="submit"></button>
+        </form>
+        <div style="flex-basis: 100%">
+          <button
+            onclick="init()"
+            class="bg-blue-500 hover:bg-blue-600 border-0 my-2 px-2 py-1 rounded-md font-semibold"
+          >
+            CONNECT
+          </button>
+        </div>
+      </div>
     </header>
     <main>
       <div id="chat_container" class="chat-container block px-10 py-12"></div>
 
       <div class="border border-gray-200"></div>
-      <form id="MCC" class="contentContainer w-full flex flex-wrap">
+      <form
+        id="MCC"
+        class="contentContainer w-full flex flex-wrap"
+        ondragover="allowDrop(event)"
+        ondrop="drop(event, this.id, false)"
+      >
         <fieldset id="MCC_1" disabled>
           <input
             type="text"
             id="contentBox"
             placeholder="You cannot type here right now."
-            style="width: 99vw;"
+            style="width: 99vw"
             class="basis-full pb-20 py-5 px-6"
-          >
+          />
           <button
             type="submit"
             onclick="send();"
@@ -89,16 +121,24 @@
     </main>
   </body>
   <script type="text/html" id="chatTemplate">
-    <div
-      id="msg-container"
-      class="flex flex-wrap w-3/4 my-10 py-4 px-3 bg-gray-100 rounded-md"
-    >
-      <div class="meta_container flex basis-full">
-        <div id="sender" class="font-semibold pr-4">User</div>
-        <div id="timestamp" class="text-gray-500">0:00 AM</div>
-      </div>
-      <div id="message" class="ml-2" style="overflow-wrap: anywhere;">
-        <i>Empty Message</i>
+    <div class="flex">
+      <img
+        id="msg-pfp"
+        class="bg-blue-500 mt-10 mr-3 rounded-full"
+        style="width: 50px; height: 50px;"
+        src="./assets/png/nouser.png"
+      />
+      <div
+        id="msg-container"
+        class="flex flex-wrap w-3/4 my-10 py-4 px-3 bg-gray-100 rounded-md"
+      >
+        <div class="meta_container flex basis-full">
+          <div id="sender" class="font-semibold pr-4">User</div>
+          <div id="timestamp" class="text-gray-500">0:00 AM</div>
+        </div>
+        <div id="message" class="ml-2" style="overflow-wrap: anywhere;">
+          <i>Empty Message</i>
+        </div>
       </div>
     </div>
   </script>
@@ -110,5 +150,59 @@
     MCC.addEventListener("submit", (event) => {
       event.preventDefault();
     });
+  </script>
+  <script>
+    function drop(e, id, setSrc) {
+      let img;
+      id = document.getElementById(id);
+      e.stopPropagation();
+      e.preventDefault();
+      //
+      var url = e.dataTransfer.getData("text/plain");
+      // for img elements, url is the img src so
+      // create an Image Object & draw to canvas
+      if (url) {
+        if (setSrc) {
+          img.src = url;
+        } else {
+          sendMsg(`<img src="${url}"/>`);
+        }
+        console.log(url);
+        // for img file(s), read the file & draw to canvas
+      } else {
+        if (setSrc) {
+          handleFiles(e.dataTransfer.files, id, true);
+        } else {
+          handleFiles(e.dataTransfer.files, id, false);
+        }
+      }
+    }
+    // read & create an image from the image file
+    function handleFiles(files, id, setSrc) {
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var imageType = /image.*/;
+        if (!file.type.match(imageType)) {
+          continue;
+        }
+        var reader = new FileReader();
+        reader.addEventListener(
+          "load",
+          () => {
+            // convert image file to base64 string
+            if (setSrc) {
+              id.src = reader.result;
+            } else {
+              sendMsg(`<img src="${reader.result}"/>`);
+            }
+          },
+          false
+        );
+        reader.readAsDataURL(file);
+      } // end for
+    } // end handleFiles
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
   </script>
 </html>
