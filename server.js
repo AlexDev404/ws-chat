@@ -6,6 +6,11 @@ const port = process.env.PORT || 8010;
 const chatlog = [];
 const anonyMode = false;
 
+// GET private IP (for development purposes)
+require("dns").lookup(require("os").hostname(), function (err, add, fam) {
+  console.log(add + ":" + port);
+});
+
 const server = app.listen(port, () => {
   if (process.send) {
     process.send(`Server running on port ${port}\n\n`);
