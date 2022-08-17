@@ -77,8 +77,8 @@ ws.on("connection", (websocketConnection) => {
     // Check if the user is using a reserved username
 
     if (
-      data.identity[0].toString().toUpperCase() == "SYSTEM" ||
-      data.identity[0].toString().toUpperCase() == "SUBSYSTEM"
+      data.identity[0].toString().toUpperCase().trim() == "SYSTEM" ||
+      data.identity[0].toString().toUpperCase().trim() == "SUBSYSTEM"
     ) {
       console.warn("[SUBSYSTEM] Format Unsupported");
       systemBroadcast("Cannot set username to a reserved username.");
